@@ -25,17 +25,11 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    String TAG = "RemindMe";
     LocalData localData;
 
-    SwitchCompat reminderSwitch;
     TextView tvTime;
-
-    LinearLayout ll_set_time, ll_terms;
-
     int hour, min;
 
-    ClipboardManager myClipboard;
 
 
     @Override
@@ -45,85 +39,23 @@ public class MainActivity extends AppCompatActivity {
 
         localData = new LocalData(getApplicationContext());
 
-        myClipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-
-        ll_set_time = (LinearLayout) findViewById(R.id.ll_set_time);
-        ll_terms = (LinearLayout) findViewById(R.id.ll_terms);
-
-        tvTime = (TextView) findViewById(R.id.tv_reminder_time_desc);
-
-        reminderSwitch = findViewById(R.id.timerSwitch);
+        tvTime = findViewById(R.id.tv_reminder_time_desc);
 
         hour = localData.get_hour();
         min = localData.get_min();
 
         tvTime.setText(getFormatedTime(hour, min));
-        reminderSwitch.setChecked(localData.getReminderStatus());
-
-        if (!localData.getReminderStatus())
-            ll_set_time.setAlpha(0.4f);
-
-        reminderSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                localData.setReminderStatus(isChecked);
-                if (isChecked) {
-                    Log.d(TAG, "onCheckedChanged: true");
-                    NotificationScheduler.setReminder(MainActivity.this, AlarmReceiver.class, localData.get_hour(), localData.get_min());
-                    ll_set_time.setAlpha(1f);
-                } else {
-                    Log.d(TAG, "onCheckedChanged: false");
-                    NotificationScheduler.cancelReminder(MainActivity.this, AlarmReceiver.class);
-                    ll_set_time.setAlpha(0.4f);
-                }
-
-            }
-        });
-
-        ll_set_time.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (localData.getReminderStatus())
-                    showTimePickerDialog(localData.get_hour(), localData.get_min());
-            }
-        });
-
-        ll_terms.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
-
-
+        NotificationScheduler.setReminder(MainActivity.this, AlarmReceiver.class, localData.get_hour(), localData.get_min());
+        showSendHour(21,50);
     }
 
-
-    private void showTimePickerDialog(int h, int m) {
-
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.timepicker_header, null);
-
-        TimePickerDialog builder = new TimePickerDialog(this, R.style.DialogTheme,
-                new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int hour, int min) {
-                        Log.d(TAG, "onTimeSet: hour " + hour);
-                        Log.d(TAG, "onTimeSet: min " + min);
-                        localData.set_hour(hour);
-                        localData.set_min(min);
-                        tvTime.setText(getFormatedTime(hour, min));
-                        NotificationScheduler.setReminder(MainActivity.this, AlarmReceiver.class, localData.get_hour(), localData.get_min());
-
-
-                    }
-                }, h, m, false);
-
-        builder.setCustomTitle(view);
-        builder.show();
-
+    private void showSendHour(int hour, int min) {
+        localData.set_hour(hour);
+        localData.set_min(min);
+        tvTime.setText(getFormatedTime(hour, min));
+        NotificationScheduler.setReminder(MainActivity.this, AlarmReceiver.class, localData.get_hour(), localData.get_min());
     }
+
 
     public String getFormatedTime(int h, int m) {
         final String OLD_FORMAT = "HH:mm";

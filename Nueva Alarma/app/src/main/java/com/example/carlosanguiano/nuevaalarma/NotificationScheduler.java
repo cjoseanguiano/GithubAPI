@@ -24,10 +24,9 @@ import static android.content.Context.ALARM_SERVICE;
 
 public class NotificationScheduler
 {
-    public static final int DAILY_REMINDER_REQUEST_CODE=100;
-    public static final String TAG="NotificationScheduler";
+    private static final int DAILY_REMINDER_REQUEST_CODE=100;
 
-    public static void setReminder(Context context, Class<?> cls, int hour, int min)
+    static void setReminder(Context context, Class<?> cls, int hour, int min)
     {
         Calendar calendar = Calendar.getInstance();
 
@@ -36,13 +35,10 @@ public class NotificationScheduler
         setcalendar.set(Calendar.MINUTE, min);
         setcalendar.set(Calendar.SECOND, 0);
 
-        // cancel already scheduled reminders
         cancelReminder(context,cls);
 
         if(setcalendar.before(calendar))
             setcalendar.add(Calendar.DATE,1);
-
-        // Enable a receiver
 
         ComponentName receiver = new ComponentName(context, cls);
         PackageManager pm = context.getPackageManager();
@@ -59,10 +55,8 @@ public class NotificationScheduler
 
     }
 
-    public static void cancelReminder(Context context,Class<?> cls)
+    private static void cancelReminder(Context context, Class<?> cls)
     {
-        // Disable a receiver
-
         ComponentName receiver = new ComponentName(context, cls);
         PackageManager pm = context.getPackageManager();
 
