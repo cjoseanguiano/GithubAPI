@@ -45,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
         min = localData.get_min();
 
         tvTime.setText(getFormatedTime(hour, min));
-        NotificationScheduler.setReminder(MainActivity.this, AlarmReceiver.class, localData.get_hour(), localData.get_min());
-        showSendHour(21,50);
+//        NotificationScheduler.setReminder(MainActivity.this, AlarmReceiver.class, localData.get_hour(), localData.get_min());
+        showSendHour(22,14);
     }
 
     private void showSendHour(int hour, int min) {
@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         tvTime.setText(getFormatedTime(hour, min));
         NotificationScheduler.setReminder(MainActivity.this, AlarmReceiver.class, localData.get_hour(), localData.get_min());
     }
+
 
 
     public String getFormatedTime(int h, int m) {
